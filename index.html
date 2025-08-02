@@ -17,7 +17,7 @@
             background-color: #15803d;
             display: flex;
             flex-direction: column;
-            padding: 8px;
+            padding: 6px;
             overflow: hidden;
             position: relative;
         }
@@ -26,66 +26,116 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         
         .status-info {
             text-align: center;
         }
         
-        .selection-indicator {
-            background-color: #fde047;
-            color: black;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 12px;
-        }
-        
-        .win-indicator {
-            background-color: #facc15;
-            color: black;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        
         .new-game-btn {
             background-color: #2563eb;
             color: white;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 12px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
             border: none;
             cursor: pointer;
+            min-height: 44px;
+            min-width: 60px;
+        }
+        
+        .auto-win-btn {
+            background-color: #059669;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            margin-right: 8px;
+            min-height: 44px;
+            min-width: 80px;
+        }
+        
+        .win-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .win-popup-content {
+            background-color: white;
+            padding: 32px 24px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            max-width: 320px;
+            width: 90%;
+        }
+        
+        .win-popup h2 {
+            color: #15803d;
+            font-size: 26px;
+            margin-bottom: 16px;
+            font-weight: bold;
+        }
+        
+        .win-popup p {
+            color: #4b5563;
+            margin-bottom: 24px;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+        
+        .win-popup-btn {
+            background-color: #2563eb;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            min-height: 56px;
         }
         
         .top-area {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
         
         .stock-waste {
             display: flex;
-            gap: 4px;
+            gap: 6px;
         }
         
         .foundations {
             display: flex;
-            gap: 4px;
+            gap: 6px;
         }
         
         .card {
-            width: 48px;
-            height: 64px;
-            border-radius: 6px;
+            width: 58px;
+            height: 78px;
+            border-radius: 8px;
             cursor: pointer;
             box-shadow: 0 1px 3px rgba(0,0,0,0.12);
             position: relative;
             overflow: hidden;
             background: none;
             border: none;
+            min-height: 44px;
+            min-width: 44px;
         }
         
         .card-face-down {
@@ -97,10 +147,10 @@
         }
         
         .card-back-pattern {
-            width: 32px;
-            height: 48px;
+            width: 38px;
+            height: 58px;
             background-color: #1e3a8a;
-            border-radius: 4px;
+            border-radius: 6px;
             border: 1px solid #3b82f6;
         }
         
@@ -121,11 +171,19 @@
         
         .card-corner-top {
             position: absolute;
-            top: 4px;
-            left: 4px;
-            font-size: 12px;
+            top: 3px;
+            left: 3px;
+            font-size: 14px;
             font-weight: bold;
-            line-height: 1;
+            line-height: 1.1;
+            text-shadow: 0 0 2px rgba(255,255,255,0.8);
+            background-color: rgba(255,255,255,0.9);
+            padding: 1px 2px;
+            border-radius: 2px;
+            min-height: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .card-center {
@@ -133,18 +191,26 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 14px;
+            font-size: 16px;
             line-height: 1;
         }
         
         .card-corner-bottom {
             position: absolute;
-            bottom: 4px;
-            right: 4px;
-            font-size: 12px;
+            bottom: 3px;
+            right: 3px;
+            font-size: 14px;
             font-weight: bold;
-            line-height: 1;
+            line-height: 1.1;
             transform: rotate(180deg);
+            text-shadow: 0 0 2px rgba(255,255,255,0.8);
+            background-color: rgba(255,255,255,0.9);
+            padding: 1px 2px;
+            border-radius: 2px;
+            min-height: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .card-selected {
@@ -153,16 +219,26 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
         
+        .card-shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+            20%, 40%, 60%, 80% { transform: translateX(3px); }
+        }
+        
         .stock-counter {
             position: absolute;
-            bottom: -4px;
-            right: -4px;
+            bottom: -6px;
+            right: -6px;
             background-color: #1e40af;
             color: white;
-            font-size: 12px;
+            font-size: 13px;
             border-radius: 50%;
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -172,12 +248,12 @@
         .tableau {
             flex: 1;
             overflow: hidden;
-            margin-bottom: 40px;
+            margin-bottom: 60px;
         }
         
         .tableau-columns {
             display: flex;
-            gap: 4px;
+            gap: 3px;
             height: 100%;
         }
         
@@ -189,26 +265,85 @@
         .instructions {
             text-align: center;
             color: #bbf7d0;
-            font-size: 12px;
+            font-size: 14px;
             margin-top: 8px;
             position: absolute;
-            bottom: 20px;
+            bottom: 15px;
             left: 0;
             right: 0;
+            padding: 0 10px;
         }
         
         .hidden {
             display: none;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-height: 600px) {
+            .tableau {
+                margin-bottom: 45px;
+            }
+            .instructions {
+                font-size: 13px;
+                bottom: 10px;
+            }
+            .header {
+                margin-bottom: 4px;
+            }
+            .top-area {
+                margin-bottom: 6px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .card {
+                width: 52px;
+                height: 70px;
+            }
+            .card-back-pattern {
+                width: 34px;
+                height: 52px;
+            }
+            .card-center {
+                font-size: 14px;
+            }
+            .card-corner-top, .card-corner-bottom {
+                font-size: 12px;
+                min-height: 14px;
+                padding: 1px;
+            }
+            .foundations {
+                gap: 4px;
+            }
+            .stock-waste {
+                gap: 4px;
+            }
+            .tableau-columns {
+                gap: 2px;
+            }
+            .new-game-btn, .auto-win-btn {
+                padding: 6px 12px;
+                font-size: 13px;
+                min-height: 40px;
+            }
+            .auto-win-btn {
+                min-width: 70px;
+                margin-right: 6px;
+            }
+            .new-game-btn {
+                min-width: 50px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="status-info">
-            <div id="selectionIndicator" class="selection-indicator hidden"></div>
-            <div id="winIndicator" class="win-indicator hidden">You Won!</div>
         </div>
-        <button id="newGameBtn" class="new-game-btn">New</button>
+        <div>
+            <button id="autoWinBtn" class="auto-win-btn hidden">Auto-Win</button>
+            <button id="newGameBtn" class="new-game-btn">New</button>
+        </div>
     </div>
     
     <div class="top-area">
@@ -241,7 +376,15 @@
     </div>
 
     <div id="instructions" class="instructions">
-        Tap cards to select, then tap destination to move
+        Click cards to auto-move to the best available pile
+    </div>
+
+    <div id="winPopup" class="win-popup hidden">
+        <div class="win-popup-content">
+            <h2>🎉 You Won!</h2>
+            <p>Congratulations! You've successfully completed the game.</p>
+            <button id="newGameFromPopup" class="win-popup-btn">New Game</button>
+        </div>
     </div>
 
     <script>
@@ -253,9 +396,8 @@
             waste: [],
             foundations: [[], [], [], []],
             tableau: [[], [], [], [], [], [], []],
-            selectedCards: [],
-            selectedSource: null,
-            gameWon: false
+            gameWon: false,
+            autoWinning: false
         };
         
         function createDeck() {
@@ -334,12 +476,12 @@
             gameState.stock = deck.slice(cardIndex);
             gameState.waste = [];
             gameState.foundations = [[], [], [], []];
-            gameState.selectedCards = [];
-            gameState.selectedSource = null;
             gameState.gameWon = false;
+            gameState.autoWinning = false;
             
             console.log(`Dealt ${cardIndex} cards to tableau, ${gameState.stock.length} cards to stock`);
             
+            hideWinPopup();
             renderGame();
         }
         
@@ -358,7 +500,6 @@
                 gameState.waste = [];
             }
             
-            clearSelection();
             renderGame();
         }
         
@@ -381,6 +522,161 @@
             const firstCard = cards[0];
             return topCard.red !== firstCard.red && 
                    RANKS.indexOf(firstCard.rank) === RANKS.indexOf(topCard.rank) - 1;
+        }
+        
+        function isAutoWinnable() {
+            // Game is auto-winnable if all cards are face-up and can be moved to foundations
+            if (gameState.stock.length > 0) return false;
+            
+            // Check if all tableau cards are face-up
+            for (let col = 0; col < 7; col++) {
+                const column = gameState.tableau[col];
+                for (let card of column) {
+                    if (!card.faceUp) return false;
+                }
+            }
+            
+            // Check if all remaining cards can eventually reach foundations
+            // We'll do this by simulating the moves
+            return canCompleteGame();
+        }
+        
+        function canCompleteGame() {
+            // Create a copy of the current state to test
+            const testState = {
+                waste: [...gameState.waste],
+                foundations: gameState.foundations.map(f => [...f]),
+                tableau: gameState.tableau.map(col => [...col])
+            };
+            
+            let madeProgress = true;
+            while (madeProgress) {
+                madeProgress = false;
+                
+                // Try to move cards to foundations
+                // Check waste pile
+                if (testState.waste.length > 0) {
+                    const card = testState.waste[0];
+                    for (let i = 0; i < 4; i++) {
+                        if (canPlaceOnFoundationInState(card, i, testState)) {
+                            testState.foundations[i].push(card);
+                            testState.waste.shift();
+                            madeProgress = true;
+                            break;
+                        }
+                    }
+                }
+                
+                // Check tableau columns
+                for (let col = 0; col < 7; col++) {
+                    const column = testState.tableau[col];
+                    if (column.length > 0) {
+                        const topCard = column[column.length - 1];
+                        if (topCard.faceUp) {
+                            for (let i = 0; i < 4; i++) {
+                                if (canPlaceOnFoundationInState(topCard, i, testState)) {
+                                    testState.foundations[i].push(topCard);
+                                    testState.tableau[col].pop();
+                                    madeProgress = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Check if all cards are in foundations
+            const totalInFoundations = testState.foundations.reduce((sum, pile) => sum + pile.length, 0);
+            return totalInFoundations === 52;
+        }
+        
+        function canPlaceOnFoundationInState(card, foundationIndex, state) {
+            const foundation = state.foundations[foundationIndex];
+            if (foundation.length === 0) {
+                return card.rank === 'A';
+            }
+            const topCard = foundation[foundation.length - 1];
+            return card.suit === topCard.suit && 
+                   RANKS.indexOf(card.rank) === RANKS.indexOf(topCard.rank) + 1;
+        }
+        
+        function executeAutoWin() {
+            if (gameState.autoWinning) return;
+            gameState.autoWinning = true;
+            
+            const autoWinBtn = document.getElementById('autoWinBtn');
+            autoWinBtn.classList.add('hidden');
+            
+            // Move all cards instantly to foundations in proper order
+            let madeProgress = true;
+            while (madeProgress && !gameState.gameWon) {
+                madeProgress = false;
+                
+                // Check waste pile first
+                if (gameState.waste.length > 0) {
+                    const card = gameState.waste[0];
+                    for (let i = 0; i < 4; i++) {
+                        if (canPlaceOnFoundation(card, i)) {
+                            gameState.waste.shift();
+                            gameState.foundations[i].push(card);
+                            madeProgress = true;
+                            break;
+                        }
+                    }
+                }
+                
+                // Check tableau columns
+                if (!madeProgress) {
+                    for (let col = 0; col < 7 && !madeProgress; col++) {
+                        const column = gameState.tableau[col];
+                        if (column.length > 0) {
+                            const topCard = column[column.length - 1];
+                            if (topCard.faceUp) {
+                                for (let i = 0; i < 4; i++) {
+                                    if (canPlaceOnFoundation(topCard, i)) {
+                                        gameState.tableau[col].pop();
+                                        
+                                        // Flip next card if needed
+                                        if (gameState.tableau[col].length > 0) {
+                                            const nextCard = gameState.tableau[col][gameState.tableau[col].length - 1];
+                                            if (!nextCard.faceUp) {
+                                                nextCard.faceUp = true;
+                                            }
+                                        }
+                                        
+                                        gameState.foundations[i].push(topCard);
+                                        madeProgress = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                checkWin();
+            }
+            
+            gameState.autoWinning = false;
+            renderGame();
+            
+            // Show win popup after a brief delay to let player see the completed layout
+            if (gameState.gameWon) {
+                setTimeout(() => {
+                    showWinPopup();
+                }, 500);
+            }
+        }
+        
+        function showWinPopup() {
+            const winPopup = document.getElementById('winPopup');
+            winPopup.classList.remove('hidden');
+        }
+        
+        function hideWinPopup() {
+            const winPopup = document.getElementById('winPopup');
+            winPopup.classList.add('hidden');
         }
         
         function moveCards(cards, fromSource, fromIndex, toSource, toIndex) {
@@ -422,101 +718,116 @@
             }
         }
         
-        function handleCardClick(card, source, sourceIndex, cardIndex) {
-            if (gameState.selectedCards.length > 0) {
-                // Try to place selected cards
-                if (source === 'foundation' && gameState.selectedCards.length === 1) {
-                    if (canPlaceOnFoundation(gameState.selectedCards[0], sourceIndex)) {
-                        moveCards(gameState.selectedCards, gameState.selectedSource.source, 
-                                gameState.selectedSource.sourceIndex, 'foundation', sourceIndex);
-                    }
-                } else if (source === 'tableau') {
-                    if (canPlaceOnTableau(gameState.selectedCards, sourceIndex)) {
-                        moveCards(gameState.selectedCards, gameState.selectedSource.source, 
-                                gameState.selectedSource.sourceIndex, 'tableau', sourceIndex);
-                    }
-                }
-                clearSelection();
-            } else {
-                // Select cards
-                if (source === 'waste' && sourceIndex === 0) {
-                    gameState.selectedCards = [card];
-                    gameState.selectedSource = { source, sourceIndex, cardIndex };
-                } else if (source === 'tableau') {
-                    const column = gameState.tableau[sourceIndex];
-                    const availableCards = column.slice(cardIndex).filter(c => c.faceUp);
-                    if (availableCards.length > 0) {
-                        gameState.selectedCards = availableCards;
-                        gameState.selectedSource = { source, sourceIndex, cardIndex };
-                    }
-                } else if (source === 'foundation') {
-                    gameState.selectedCards = [card];
-                    gameState.selectedSource = { source, sourceIndex, cardIndex };
+        function findBestDestination(cards) {
+            // First try foundations (prefer foundations over tableau)
+            for (let i = 0; i < 4; i++) {
+                if (cards.length === 1 && canPlaceOnFoundation(cards[0], i)) {
+                    return { type: 'foundation', index: i };
                 }
             }
             
-            renderGame();
-            checkWin();
+            // Then try tableau columns
+            for (let i = 0; i < 7; i++) {
+                if (canPlaceOnTableau(cards, i)) {
+                    return { type: 'tableau', index: i };
+                }
+            }
+            
+            return null;
         }
         
-        function handleEmptySpaceClick(source, sourceIndex) {
-            if (gameState.selectedCards.length > 0) {
-                if (source === 'foundation' && gameState.selectedCards.length === 1) {
-                    if (canPlaceOnFoundation(gameState.selectedCards[0], sourceIndex)) {
-                        moveCards(gameState.selectedCards, gameState.selectedSource.source, 
-                                gameState.selectedSource.sourceIndex, 'foundation', sourceIndex);
-                    }
-                } else if (source === 'tableau') {
-                    if (canPlaceOnTableau(gameState.selectedCards, sourceIndex)) {
-                        moveCards(gameState.selectedCards, gameState.selectedSource.source, 
-                                gameState.selectedSource.sourceIndex, 'tableau', sourceIndex);
+        function getMoveableCards(source, sourceIndex, cardIndex) {
+            if (source === 'waste') {
+                return gameState.waste.length > 0 ? [gameState.waste[0]] : [];
+            } else if (source === 'foundation') {
+                const foundation = gameState.foundations[sourceIndex];
+                return foundation.length > 0 ? [foundation[foundation.length - 1]] : [];
+            } else if (source === 'tableau') {
+                const column = gameState.tableau[sourceIndex];
+                if (cardIndex >= column.length) return [];
+                
+                // Get all face-up cards from this position to the end
+                const availableCards = column.slice(cardIndex).filter(c => c.faceUp);
+                
+                // Verify they form a valid descending sequence with alternating colors
+                if (availableCards.length <= 1) return availableCards;
+                
+                for (let i = 0; i < availableCards.length - 1; i++) {
+                    const current = availableCards[i];
+                    const next = availableCards[i + 1];
+                    
+                    if (current.red === next.red || 
+                        RANKS.indexOf(current.rank) !== RANKS.indexOf(next.rank) + 1) {
+                        return availableCards.slice(0, i + 1);
                     }
                 }
-                clearSelection();
+                
+                return availableCards;
+            }
+            return [];
+        }
+        
+        function shakeCard(cardElement) {
+            cardElement.classList.add('card-shake');
+            setTimeout(() => {
+                cardElement.classList.remove('card-shake');
+            }, 500);
+        }
+        
+        function handleCardClick(card, source, sourceIndex, cardIndex, cardElement) {
+            if (gameState.autoWinning) return;
+            
+            const moveableCards = getMoveableCards(source, sourceIndex, cardIndex);
+            
+            if (moveableCards.length === 0) {
+                shakeCard(cardElement);
+                return;
+            }
+            
+            const destination = findBestDestination(moveableCards);
+            
+            if (destination) {
+                moveCards(moveableCards, source, sourceIndex, destination.type, destination.index);
                 renderGame();
                 checkWin();
+            } else {
+                shakeCard(cardElement);
             }
-        }
-        
-        function clearSelection() {
-            gameState.selectedCards = [];
-            gameState.selectedSource = null;
-        }
-        
-        function isCardSelected(card, source, sourceIndex, cardIndex) {
-            return gameState.selectedCards.some(selected => selected.id === card.id) &&
-                   gameState.selectedSource?.source === source &&
-                   gameState.selectedSource?.sourceIndex === sourceIndex;
         }
         
         function checkWin() {
             const totalFoundationCards = gameState.foundations.reduce((sum, pile) => sum + pile.length, 0);
             if (totalFoundationCards === 52) {
                 gameState.gameWon = true;
+                // Only show popup if not in auto-win mode (auto-win handles its own popup timing)
+                if (!gameState.autoWinning) {
+                    setTimeout(() => {
+                        showWinPopup();
+                    }, 300);
+                }
             }
         }
         
-        function renderGame() {
-            // Update selection indicator
-            const selectionIndicator = document.getElementById('selectionIndicator');
-            if (gameState.selectedCards.length > 0) {
-                selectionIndicator.textContent = `${gameState.selectedCards.length} card${gameState.selectedCards.length > 1 ? 's' : ''} selected`;
-                selectionIndicator.classList.remove('hidden');
-            } else {
-                selectionIndicator.classList.add('hidden');
+        function getCardSpacing() {
+            // Adjust card spacing based on screen size for better visibility of suit/rank
+            if (window.innerWidth <= 400) {
+                return 18;
             }
-            
-            // Update win indicator
-            const winIndicator = document.getElementById('winIndicator');
-            if (gameState.gameWon) {
-                winIndicator.classList.remove('hidden');
+            return 20;
+        }
+        
+        function renderGame() {
+            // Update auto-win button
+            const autoWinBtn = document.getElementById('autoWinBtn');
+            if (!gameState.gameWon && !gameState.autoWinning && isAutoWinnable()) {
+                autoWinBtn.classList.remove('hidden');
             } else {
-                winIndicator.classList.add('hidden');
+                autoWinBtn.classList.add('hidden');
             }
             
             // Update instructions
             const instructions = document.getElementById('instructions');
-            if (gameState.selectedCards.length === 0 && !gameState.gameWon) {
+            if (!gameState.gameWon && !gameState.autoWinning) {
                 instructions.classList.remove('hidden');
             } else {
                 instructions.classList.add('hidden');
@@ -543,10 +854,7 @@
             if (gameState.waste.length > 0) {
                 const card = gameState.waste[0];
                 const cardEl = createCardElement(card);
-                if (isCardSelected(card, 'waste', 0, 0)) {
-                    cardEl.classList.add('card-selected');
-                }
-                cardEl.onclick = () => handleCardClick(card, 'waste', 0, 0);
+                cardEl.onclick = () => handleCardClick(card, 'waste', 0, 0, cardEl);
                 wastePile.appendChild(cardEl);
             } else {
                 wastePile.appendChild(createCardElement(null, true));
@@ -559,42 +867,31 @@
                 if (gameState.foundations[i].length > 0) {
                     const card = gameState.foundations[i][gameState.foundations[i].length - 1];
                     const cardEl = createCardElement(card);
-                    cardEl.onclick = () => handleCardClick(card, 'foundation', i, gameState.foundations[i].length - 1);
+                    cardEl.onclick = () => handleCardClick(card, 'foundation', i, gameState.foundations[i].length - 1, cardEl);
                     foundation.appendChild(cardEl);
                 } else {
                     const placeholder = createCardElement(null, true);
-                    placeholder.onclick = () => handleEmptySpaceClick('foundation', i);
                     foundation.appendChild(placeholder);
                 }
             }
             
             // Render tableau
+            const cardSpacing = getCardSpacing();
             for (let col = 0; col < 7; col++) {
                 const column = document.getElementById(`tableau${col}`);
                 column.innerHTML = '';
                 
                 if (gameState.tableau[col].length === 0) {
                     const placeholder = createCardElement(null, true);
-                    placeholder.onclick = () => handleEmptySpaceClick('tableau', col);
                     column.appendChild(placeholder);
                 } else {
                     gameState.tableau[col].forEach((card, cardIndex) => {
                         const cardEl = createCardElement(card);
                         cardEl.style.position = 'absolute';
-                        cardEl.style.top = `${cardIndex * 10}px`;
+                        cardEl.style.top = `${cardIndex * cardSpacing}px`;
                         cardEl.style.zIndex = cardIndex;
                         
-                        const isPartOfSelection = gameState.selectedSource?.source === 'tableau' && 
-                                                gameState.selectedSource?.sourceIndex === col && 
-                                                cardIndex >= gameState.selectedSource?.cardIndex;
-                        
-                        if (isPartOfSelection) {
-                            cardEl.style.transform = 'translateY(-6px)';
-                            cardEl.style.zIndex = 10 + cardIndex;
-                            cardEl.style.boxShadow = '0 4px 8px rgba(0,0,0,0.3)';
-                        }
-                        
-                        cardEl.onclick = () => handleCardClick(card, 'tableau', col, cardIndex);
+                        cardEl.onclick = () => handleCardClick(card, 'tableau', col, cardIndex, cardEl);
                         column.appendChild(cardEl);
                     });
                 }
@@ -603,6 +900,8 @@
         
         // Initialize game
         document.getElementById('newGameBtn').onclick = dealCards;
+        document.getElementById('newGameFromPopup').onclick = dealCards;
+        document.getElementById('autoWinBtn').onclick = executeAutoWin;
         dealCards();
     </script>
 </body>
