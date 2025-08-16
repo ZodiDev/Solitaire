@@ -480,9 +480,8 @@
         const MAX_HISTORY = 100; // Limit history to prevent memory issues
         
         function deepCopyGameState(state) {
+            // Only save tableau and foundations, not stock/waste
             return {
-                stock: state.stock.map(card => ({...card})),
-                waste: state.waste.map(card => ({...card})),
                 foundations: state.foundations.map(pile => pile.map(card => ({...card}))),
                 tableau: state.tableau.map(column => column.map(card => ({...card}))),
                 gameWon: state.gameWon,
@@ -503,7 +502,14 @@
         
         function undo() {
             if (moveHistory.length > 0) {
-                gameState = moveHistory.pop();
+                const previousState = moveHistory.pop();
+                
+                // Only restore tableau and foundations, keep current stock/waste
+                gameState.foundations = previousState.foundations;
+                gameState.tableau = previousState.tableau;
+                gameState.gameWon = previousState.gameWon;
+                gameState.autoWinning = previousState.autoWinning;
+                
                 updateUndoButton();
                 renderGame();
             }
