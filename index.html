@@ -2,13 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, orientation=portrait">
     <title>Klondike Solitaire</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+        
+        @media screen and (orientation: landscape) {
+            html {
+                transform: rotate(-90deg);
+                transform-origin: left top;
+                width: 100vh;
+                overflow-x: hidden;
+                position: absolute;
+                top: 100%;
+                left: 0;
+            }
         }
         
         body {
@@ -33,6 +45,12 @@
             text-align: center;
         }
         
+        .button-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
         .new-game-btn {
             background-color: #2563eb;
             color: white;
@@ -53,9 +71,39 @@
             font-size: 14px;
             border: none;
             cursor: pointer;
-            margin-right: 8px;
             min-height: 44px;
             min-width: 80px;
+        }
+        
+        .undo-btn {
+            background-color: #7c3aed;
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .undo-btn:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .undo-btn:not(:disabled):hover {
+            background-color: #6d28d9;
+        }
+        
+        .undo-icon {
+            display: inline-block;
+            transform: scaleX(-1);
         }
         
         .win-popup {
@@ -345,10 +393,18 @@
             }
             .auto-win-btn {
                 min-width: 70px;
-                margin-right: 6px;
             }
             .new-game-btn {
                 min-width: 50px;
+            }
+            .undo-btn {
+                min-height: 40px;
+                min-width: 40px;
+                padding: 6px;
+                font-size: 16px;
+            }
+            .button-group {
+                gap: 6px;
             }
         }
     </style>
@@ -357,7 +413,10 @@
     <div class="header">
         <div class="status-info">
         </div>
-        <div>
+        <div class="button-group">
+            <button id="undoBtn" class="undo-btn" disabled>
+                <span class="undo-icon">↩</span>
+            </button>
             <button id="autoWinBtn" class="auto-win-btn hidden">Auto-Win</button>
             <button id="newGameBtn" class="new-game-btn">New</button>
         </div>
@@ -416,6 +475,49 @@
             gameWon: false,
             autoWinning: false
         };
+        
+        let moveHistory = [];
+        const MAX_HISTORY = 100; // Limit history to prevent memory issues
+        
+        function deepCopyGameState(state) {
+            return {
+                stock: state.stock.map(card => ({...card})),
+                waste: state.waste.map(card => ({...card})),
+                foundations: state.foundations.map(pile => pile.map(card => ({...card}))),
+                tableau: state.tableau.map(column => column.map(card => ({...card}))),
+                gameWon: state.gameWon,
+                autoWinning: state.autoWinning
+            };
+        }
+        
+        function saveGameState() {
+            moveHistory.push(deepCopyGameState(gameState));
+            
+            // Limit history size
+            if (moveHistory.length > MAX_HISTORY) {
+                moveHistory.shift();
+            }
+            
+            updateUndoButton();
+        }
+        
+        function undo() {
+            if (moveHistory.length > 0) {
+                gameState = moveHistory.pop();
+                updateUndoButton();
+                renderGame();
+            }
+        }
+        
+        function updateUndoButton() {
+            const undoBtn = document.getElementById('undoBtn');
+            undoBtn.disabled = moveHistory.length === 0;
+        }
+        
+        function clearHistory() {
+            moveHistory = [];
+            updateUndoButton();
+        }
         
         function createDeck() {
             const deck = [];
@@ -502,11 +604,19 @@
             
             console.log(`Dealt ${cardIndex} cards to tableau, ${gameState.stock.length} cards to stock`);
             
+            // Clear move history when starting new game
+            clearHistory();
+            
             hideWinPopup();
             renderGame();
         }
         
         function drawFromStock() {
+            if (gameState.autoWinning) return;
+            
+            // Save state before making move
+            saveGameState();
+            
             if (gameState.stock.length > 0) {
                 const drawnCard = gameState.stock[0];
                 console.log(`Drawing 1 card from stock (${gameState.stock.length} -> ${gameState.stock.length - 1})`);
@@ -808,6 +918,9 @@
             const destination = findBestDestination(moveableCards);
             
             if (destination) {
+                // Save state before making move
+                saveGameState();
+                
                 moveCards(moveableCards, source, sourceIndex, destination.type, destination.index);
                 renderGame();
                 checkWin();
@@ -925,6 +1038,7 @@
         document.getElementById('newGameBtn').onclick = dealCards;
         document.getElementById('newGameFromPopup').onclick = dealCards;
         document.getElementById('autoWinBtn').onclick = executeAutoWin;
+        document.getElementById('undoBtn').onclick = undo;
         dealCards();
     </script>
 </body>
