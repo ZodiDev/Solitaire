@@ -614,9 +614,6 @@
         function drawFromStock() {
             if (gameState.autoWinning) return;
             
-            // Save state before making move
-            saveGameState();
-            
             if (gameState.stock.length > 0) {
                 const drawnCard = gameState.stock[0];
                 console.log(`Drawing 1 card from stock (${gameState.stock.length} -> ${gameState.stock.length - 1})`);
