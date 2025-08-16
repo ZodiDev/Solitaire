@@ -489,8 +489,10 @@
             };
         }
         
-        function saveGameState() {
-            moveHistory.push(deepCopyGameState(gameState));
+        function saveGameState(moveInfo = null) {
+            const state = deepCopyGameState(gameState);
+            state.moveInfo = moveInfo; // Save info about what move was made
+            moveHistory.push(state);
             
             // Limit history size
             if (moveHistory.length > MAX_HISTORY) {
@@ -504,7 +506,15 @@
             if (moveHistory.length > 0) {
                 const previousState = moveHistory.pop();
                 
-                // Only restore tableau and foundations, keep current stock/waste
+                // If the move involved taking a card from waste, put it back in stock
+                if (previousState.moveInfo && previousState.moveInfo.fromWaste) {
+                    const cardToRestore = previousState.moveInfo.cardMoved;
+                    cardToRestore.faceUp = false; // Put it back face down in stock
+                    // Add to bottom of stock pile so counter increases
+                    gameState.stock = [...gameState.stock, cardToRestore];
+                }
+                
+                // Only restore tableau and foundations, keep current stock position
                 gameState.foundations = previousState.foundations;
                 gameState.tableau = previousState.tableau;
                 gameState.gameWon = previousState.gameWon;
@@ -921,8 +931,14 @@
             const destination = findBestDestination(moveableCards);
             
             if (destination) {
+                // Create move info to track what happened
+                const moveInfo = {
+                    fromWaste: source === 'waste',
+                    cardMoved: source === 'waste' ? {...moveableCards[0]} : null
+                };
+                
                 // Save state before making move
-                saveGameState();
+                saveGameState(moveInfo);
                 
                 moveCards(moveableCards, source, sourceIndex, destination.type, destination.index);
                 renderGame();
