@@ -834,26 +834,110 @@
         let moveHistory = [];
         const MAX_HISTORY = 100; // Limit history to prevent memory issues
 
-        // Win counter functionality
+        // Enhanced win counter functionality with multiple storage fallbacks
+        let memoryWinCount = 0; // Fallback for session-only storage
+
         function getWinCount() {
             try {
-                return parseInt(localStorage.getItem('klondike-win-count') || '0', 10);
+                // Try localStorage first
+                const stored = localStorage.getItem('klondike-win-count');
+                if (stored !== null) {
+                    const count = parseInt(stored, 10);
+                    if (!isNaN(count)) {
+                        memoryWinCount = count; // Sync with memory
+                        return count;
+                    }
+                }
             } catch (e) {
-                return 0;
+                console.warn('localStorage not available:', e);
             }
+
+            try {
+                // Try sessionStorage as fallback
+                const sessionStored = sessionStorage.getItem('klondike-win-count');
+                if (sessionStored !== null) {
+                    const count = parseInt(sessionStored, 10);
+                    if (!isNaN(count)) {
+                        memoryWinCount = count;
+                        return count;
+                    }
+                }
+            } catch (e) {
+                console.warn('sessionStorage not available:', e);
+            }
+
+            // Try cookies as another fallback
+            try {
+                const cookieValue = getCookie('klondike-win-count');
+                if (cookieValue) {
+                    const count = parseInt(cookieValue, 10);
+                    if (!isNaN(count)) {
+                        memoryWinCount = count;
+                        return count;
+                    }
+                }
+            } catch (e) {
+                console.warn('Cookie storage not available:', e);
+            }
+
+            // Return memory count as final fallback
+            return memoryWinCount;
         }
 
         function incrementWinCount() {
+            const currentCount = getWinCount();
+            const newCount = currentCount + 1;
+            memoryWinCount = newCount; // Always update memory
+
+            // Try to save to localStorage
             try {
-                const currentCount = getWinCount();
-                const newCount = currentCount + 1;
                 localStorage.setItem('klondike-win-count', newCount.toString());
-                updateWinCountDisplay();
-                return newCount;
+                console.log('Saved to localStorage:', newCount);
             } catch (e) {
-                console.warn('Unable to save win count to localStorage');
-                return getWinCount();
+                console.warn('Unable to save to localStorage:', e);
+                
+                // Try sessionStorage
+                try {
+                    sessionStorage.setItem('klondike-win-count', newCount.toString());
+                    console.log('Saved to sessionStorage:', newCount);
+                } catch (e2) {
+                    console.warn('Unable to save to sessionStorage:', e2);
+                    
+                    // Try cookies
+                    try {
+                        setCookie('klondike-win-count', newCount.toString(), 365);
+                        console.log('Saved to cookies:', newCount);
+                    } catch (e3) {
+                        console.warn('Unable to save to cookies:', e3);
+                        console.log('Using memory storage only for this session');
+                    }
+                }
             }
+
+            updateWinCountDisplay();
+            return newCount;
+        }
+
+        // Cookie helper functions
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
         }
 
         function updateWinCountDisplay() {
